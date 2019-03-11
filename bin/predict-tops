@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import argparse,time
+import pandas as pa
+from hacktops.predict import predict
+
+if __name__ == "__main__":
+    """
+        Usage: run predict tops 
+        predict-tops --logs_filename filename -loc_filename filename
+    """
+    start = time.time()
+
+    parser = argparse.ArgumentParser(description="Well Tops Predictions")
+    parser.add_argument("--logs_filename", required = True, help="absolute path of filename of the input logs",type=str)   
+    parser.add_argument("--loc_filename", help="option filename of the well locations",default="",type=str)   
+    parser.add_argument("--output_filename", help="option filename of output",default="tops_predicted.parquet",type=str)   
+
+    args = parser.parse_args()
+    logs_filename = args.logs_filename
+    loc_filename = args.loc_filename
+    output_filename = args.output_filename
+
+    try:
+        df_logs = pa.read_parquet(logs_filename)
+        df_loc = None
+        if loc_filename :
+            df_loc = pa.read_parquet(loc_filename)
+
+        df_pred = predict(df_logs,df_loc)
+        df_pred.to_parquet(output_filename)
+        
+    except Exception as e:
+        print("Failed to run predict: ",str(e))
+        
+
+    end = time.time()
+    print("processesd time ", end-start)
