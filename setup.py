@@ -12,6 +12,7 @@ setup(name='hacktops',
       install_requires=[
             'pandas',
             'pyarrow',
-            'sklearn'
+            'sklearn',
+            'numpy',
       ],
       zip_safe=False)
