@@ -39,6 +39,9 @@ class TopFinder:
         self.window_classifier.fit(**kwargs)
 
     def extract_window(self, df_well:pd.DataFrame, center_idx, window_length):
+        '''
+        not normalized here
+        '''
         left_limit = center_idx - window_length
         right_limit = center_idx + window_length
         window = df_well.loc[left_limit : right_limit, 'GR'].to_numpy()
@@ -63,14 +66,11 @@ class TopFinder:
                 window_depth = row['DEPTH']
                 window_data = self.extract_window(df_well, idx, WINDOW_LENGTH)
                 if window_data.shape != (WINDOW_LENGTH * 2 + 1,):
-                    print(window_data.shape) # it should never happen
+                    # print(window_data.shape) 
+                    # It happens when the window gets out of the scope of well depth
                     continue
                 windows.append((window_depth, window_data))
         return windows
-
-    def evaluate_windows(self, windows):
-        scores = self.window_classifier.evaluate_windows(windows)
-        return scores
 
     def select_window(self, windows, scores: np.array):
         '''
@@ -96,25 +96,25 @@ class TopFinder:
 
         return top_depth
 
-class WindowClassifier_KNN:
-    def __init__(self, **kwargs):
-        self.model = KNeighborsClassifier(**kwargs)
+# class WindowClassifier_KNN:
+#     def __init__(self, **kwargs):
+#         self.model = KNeighborsClassifier(**kwargs)
 
-    def fit(self, **kwargs):
-        self.model.fit(**kwargs)
+#     def fit(self, **kwargs):
+#         self.model.fit(**kwargs)
 
-    def evaluate_windows(self, windows_data):
-        scores = self.model.predict_proba(windows_data)
-        return scores
+#     def evaluate_windows(self, windows_data):
+#         scores = self.model.predict_proba(windows_data)
+#         return scores
 
 
-if __name__ == '__main__':
-    baseline_model = WindowClassifier_KNN(n_neighbors=3, weights='distance', metric=dtw, n_jobs=4)
-    top_finder = TopFinder(baseline_model)
-    dataset = None
-    top_finder.fit(dataset)
-    df_well = None
-    top_name = 'MARCEL'
-    depth = top_finder.find_top(df_well, top_name)
-    print(f'Predicated depth of {top_name}: {depth}')
+# if __name__ == '__main__':
+#     baseline_model = WindowClassifier_KNN(n_neighbors=3, weights='distance', metric=dtw, n_jobs=4)
+#     top_finder = TopFinder(baseline_model)
+#     dataset = None
+#     top_finder.fit(dataset)
+#     df_well = None
+#     top_name = 'MARCEL'
+#     depth = top_finder.find_top(df_well, top_name)
+#     print(f'Predicated depth of {top_name}: {depth}')
 
