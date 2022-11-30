@@ -52,7 +52,9 @@ def visual_scores(depths, scores, max_score_depth=None, true_depth=None, well_na
         title += f' [well: {well_name}]'
     fig = go.Figure(data=data, layout={'title':title})
     if max_score_depth:
-        fig.add_vline(x=max_score_depth, line_width=2, line_color="yellow", annotation_text='max_score_depth')
+        fig.add_vline(x=max_score_depth, line_width=2, line_color="yellow", \
+            annotation_text='Predicated', annotation_position='top left')
     if true_depth:
-        fig.add_vline(x=true_depth, line_width=2, line_color="green", annotation_text='true_depth')
+        fig.add_vline(x=true_depth, line_width=2, line_color="green", \
+            annotation_text='True', annotation_position='top right')
     return fig

@@ -104,6 +104,7 @@ class TopFinder:
 
         return self.top_depth
 
+
 class SimpleDTWWindowEvaluator:
     """
     Simple DTW Window Evaluator
@@ -157,26 +158,9 @@ class SimpleDTWWindowEvaluator_Spark:
                 .collect()
         return scores
 
-
-# class WindowClassifier_KNN:
-#     def __init__(self, **kwargs):
-#         self.model = KNeighborsClassifier(**kwargs)
-
-#     def fit(self, **kwargs):
-#         self.model.fit(**kwargs)
-
-#     def evaluate_windows(self, windows_data):
-#         scores = self.model.predict_proba(windows_data)
+# class NewModel:
+#     def ...
+#
+#     def evaluate_windows(self, candidate_windows):
+#         ...
 #         return scores
-
-
-# if __name__ == '__main__':
-#     baseline_model = WindowClassifier_KNN(n_neighbors=3, weights='distance', metric=dtw, n_jobs=4)
-#     top_finder = TopFinder(baseline_model)
-#     dataset = None
-#     top_finder.fit(dataset)
-#     df_well = None
-#     top_name = 'MARCEL'
-#     depth = top_finder.find_top(df_well, top_name)
-#     print(f'Predicated depth of {top_name}: {depth}')
-
